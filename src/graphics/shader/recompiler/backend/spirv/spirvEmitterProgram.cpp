@@ -497,12 +497,15 @@ uint32_t ValueEmitContext::FirstLane(uint32_t ballot) {
 		                          ConstantU32(state, spv::ScopeSubgroup), ballot);
 		return result;
 	}
-	const auto low        = state.builder.AllocateId();
-	const auto high       = state.builder.AllocateId();
-	const auto low_first  = state.builder.AllocateId();
-	const auto high_first = state.builder.AllocateId();
-	const auto low_active = state.builder.AllocateId();
-	const auto result     = state.builder.AllocateId();
+	const auto low           = state.builder.AllocateId();
+	const auto high          = state.builder.AllocateId();
+	const auto low_first     = state.builder.AllocateId();
+	const auto high_first    = state.builder.AllocateId();
+	const auto low_active    = state.builder.AllocateId();
+	const auto high_active   = state.builder.AllocateId();
+	const auto any_active    = state.builder.AllocateId();
+	const auto nonzero_first = state.builder.AllocateId();
+	const auto result        = state.builder.AllocateId();
 	state.builder.AddFunction(spv::OpCompositeExtract, TypeU32(state), low, ballot, 0);
 	state.builder.AddFunction(spv::OpCompositeExtract, TypeU32(state), high, ballot, 1);
 	state.builder.AddFunction(spv::OpExtInst, TypeU32(state), low_first, GlslStd450(state),
@@ -511,8 +514,19 @@ uint32_t ValueEmitContext::FirstLane(uint32_t ballot) {
 	                          GLSLstd450FindILsb, high);
 	state.builder.AddFunction(spv::OpINotEqual, TypeBool(state), low_active, low,
 	                          ConstantU32(state, 0));
-	state.builder.AddFunction(spv::OpSelect, TypeU32(state), result, low_active, low_first,
+	state.builder.AddFunction(spv::OpINotEqual, TypeBool(state), high_active, high,
+	                          ConstantU32(state, 0));
+	// FindILsb(0) returns 0xFFFFFFFF, so high_first + 32 wraps to 31 when the whole
+	// 64-wide ballot is empty. Shuffling from lane 31 is wrong there (lane 31 is
+	// inactive in partial subgroups, e.g. Frostbite 60-wide waves or tail workgroups),
+	// and the bogus lane can feed OOB indices into the hanging full-screen compute.
+	// Fall back to lane 0 when no bit is set: deterministic and always converged.
+	state.builder.AddFunction(spv::OpLogicalOr, TypeBool(state), any_active, low_active,
+	                          high_active);
+	state.builder.AddFunction(spv::OpSelect, TypeU32(state), nonzero_first, low_active, low_first,
 	                          EmitAddU32(state, high_first, ConstantU32(state, 32)));
+	state.builder.AddFunction(spv::OpSelect, TypeU32(state), result, any_active, nonzero_first,
+	                          ConstantU32(state, 0));
 	return result;
 }
 

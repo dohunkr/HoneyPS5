@@ -112,7 +112,7 @@ public:
 	ControllerSettings controller;
 
 	Resolution             screen_resolution           = Resolution::R1280X720;
-	QString                user_name                   = "Kyty";
+	QString                user_name                   = "Honey";
 	int                    user_id                     = Config::DEFAULT_USER_ID;
 	QString                audio_input_device;
 	PresentMode            present_mode                = PresentMode::Mailbox;

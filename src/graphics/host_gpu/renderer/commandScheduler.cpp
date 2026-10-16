@@ -81,6 +81,20 @@ vk::CommandBuffer CommandScheduler::CommandPool::Commit() {
 		found = search(0, m_hint);
 	}
 	if (!found) {
+		// UFC 5 (Frostbite) title-screen hang leaves gpu_tick stuck while CurrentTick
+		// keeps increasing: every Commit grew the pool by 4 buffers, so each frame did
+		// a longer linear search over a larger vector (progressively lower FPS) and
+		// leaked VkCommandBuffers until OOM. Bound the pool and back-pressure on the
+		// oldest tick instead; MasterSemaphore::Wait now reports the exact stuck tick.
+		constexpr size_t MaxBuffers = 64;
+		if (m_ticks.size() >= MaxBuffers) {
+			const auto oldest = *std::min_element(m_ticks.begin(), m_ticks.end());
+			m_master.Wait(oldest);
+			gpu_tick = m_master.KnownGpuTick();
+			found    = search(0, m_ticks.size());
+		}
+	}
+	if (!found) {
 		found           = Grow();
 		m_ticks[*found] = m_master.CurrentTick();
 	}

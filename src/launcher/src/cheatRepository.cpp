@@ -90,7 +90,7 @@ QNetworkReply* CheatRepository::Request(const QUrl& url, qint64 limit,
 	QNetworkRequest request(url);
 	request.setAttribute(QNetworkRequest::RedirectPolicyAttribute,
 	                     QNetworkRequest::SameOriginRedirectPolicy);
-	request.setRawHeader("User-Agent", "Kyty-Launcher");
+	request.setRawHeader("User-Agent", "HoneyPS5-Launcher");
 	request.setTransferTimeout(15000);
 	auto* reply = m_network.get(request);
 	reply->setReadBufferSize(limit + 1);

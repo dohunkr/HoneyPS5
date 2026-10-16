@@ -67,9 +67,9 @@
 
 #include "ui_configuration_list_widget.h"
 
-constexpr char CONF_FILE_NAME[]    = "Kyty.ini";
-constexpr char CONF_ORG_NAME[]     = "Kyty";
-constexpr char CONF_APP_NAME[]     = "Kyty";
+constexpr char CONF_FILE_NAME[]    = "HoneyPS5.ini";
+constexpr char CONF_ORG_NAME[]     = "HoneyPS5";
+constexpr char CONF_APP_NAME[]     = "HoneyPS5";
 constexpr char CONF_SECTION_NAME[] = "GameConfigurations";
 constexpr char CONF_LAUNCHER[]     = "Launcher";
 constexpr char CONF_GAME_DIR[]     = "game_dir";

@@ -79,7 +79,7 @@ void WriteResult(const fs::path& workspace, const fs::path& target,
 	if (!stream) {
 		throw std::runtime_error("Cannot write the update result.");
 	}
-	const auto destination = target / ".kyty-update-result";
+	const auto destination = target / ".honeyps5-update-result";
 	// Never open the destination: rename safely replaces even an existing symlink.
 	std::error_code ignored;
 	fs::remove(destination, ignored);

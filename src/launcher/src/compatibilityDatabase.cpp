@@ -91,7 +91,7 @@ LoadResult DownloadOnce() {
 	QNetworkRequest       request(QUrl(QString::fromLatin1(URL)));
 	request.setAttribute(QNetworkRequest::RedirectPolicyAttribute,
 	                     QNetworkRequest::NoLessSafeRedirectPolicy);
-	request.setRawHeader("User-Agent", "Kyty-Launcher");
+	request.setRawHeader("User-Agent", "HoneyPS5-Launcher");
 
 	auto*      reply = manager.get(request);
 	QEventLoop loop;

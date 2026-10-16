@@ -50,7 +50,7 @@ static void PrintUsage() {
 	::printf("  --screen-width <num>                 Window width. Default: 1280.\n");
 	::printf("  --screen-height <num>                Window height. Default: 720.\n");
 	::printf(
-	    "  --user-name <name>                   Local user name (1-16 bytes). Default: Kyty.\n");
+	    "  --user-name <name>                   Local user name (1-16 bytes). Default: Honey.\n");
 	::printf("  --user-id <num>                      Local user ID. Default: %d.\n",
 	         Config::DEFAULT_USER_ID);
 	::printf("  --mic <name>                        Capture from this microphone; omit for silence.\n");
